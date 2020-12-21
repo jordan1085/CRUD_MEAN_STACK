@@ -5,6 +5,10 @@ var ArticleController = require('../controllers/article');
 
 var router = express.Router();
 
+// Configuar modulo para subida de archivos
+var multiparty = require('connect-multiparty');
+var md_upload = multiparty({ uploadDir: './upload/articles' });
+
 // Rutas para guardar articulos
 router.post('/save', ArticleController.save);
 
@@ -19,5 +23,8 @@ router.put('/article/:id', ArticleController.upDate);
 
 // Ruta para eliminar 
 router.delete('/article/:id', ArticleController.delete);
+
+// Ruta para subir archivos
+router.post('/upload-image/:id', md_upload, ArticleController.upload);
 
 module.exports = router;
