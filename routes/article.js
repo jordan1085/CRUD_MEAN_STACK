@@ -14,6 +14,7 @@ router.get('/articles/:last?', ArticleController.getArticles);
 // Ruta para 1 solo articulo
 router.get('/article/:id', ArticleController.getArticle);
 
-
+// Ruta para actualizar 
+router.put('/article/:id', ArticleController.upDate);
 
 module.exports = router;

@@ -5,6 +5,7 @@
 const { query } = require('express');
 var validator = require('validator'); 
 var Article = require('../models/article');
+const { param } = require('../routes/article');
 
 var controller = {
 
@@ -121,7 +122,7 @@ var controller = {
 
         // Buscar el articulo
         Article.findById(articleId, (err, article) => {
-            
+
             if(err || !article) {
                 return res.status(404).send({
                     status: 'error',
@@ -134,11 +135,73 @@ var controller = {
                 status: 'succes',
                 article
             
-            })
+            });
 
-        })
+        })  
+    },
 
-        
+    // Metodo para editar/actualizar articulo
+    upDate: (req, res) => {
+
+        // Recoger el id del articulo por la url
+        var articleId = req.params.id;
+
+        // Recoger los datos que llegan por put
+        var params = req.body;
+
+        // Validar datos
+        try {
+
+            var validate_title = !validator.isEmpty(params.title);
+            var validate_content = !validator.isEmpty(params.content);
+
+        } catch (error) {
+
+            return res.status(200).send({
+                status: 'error',
+                mensaje: 'Faltan datos por enviar !'
+            });
+
+        }
+
+        if( validate_title && validate_content ) {
+            
+            // Find and update
+            // findOneAndUpdate(id del articulo antiguo, parametros del update, devuelve articulo actualizado)
+            Article.findOneAndUpdate({_id: articleId}, params, {new: true}, 
+            (err, articleUpdate) => {
+
+                if(err) {
+                    return res.status(500).send({
+                        status: 'error',
+                        mensaje: 'Error al actualizar !'
+                    });
+                }
+                
+                if(!articleUpdate) {
+                    return res.status(404).send({
+                        status: 'error',
+                        mensaje: 'No existe el articulo !'
+                    });
+                }
+
+                // Devolver respuesta
+                return res.status(200).send({
+                    status: 'success',
+                    article: articleUpdate
+                
+                });
+               
+            });
+
+        } else {
+            return res.status(200).send({
+                status: 'error',
+                mensaje: 'La validacion no es correcta !'
+            
+            });
+        }
+
     }
 
 }; //End controller
