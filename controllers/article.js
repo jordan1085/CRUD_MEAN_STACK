@@ -7,23 +7,6 @@ var Article = require('../models/article');
 
 var controller = {
 
-    datosCurso: (req, res) => {
-    
-        var hola = req.body.hola; // Solicitud Datos que resivo req
-        
-        return res.status(200).send({ // Respuesta: Datos que devuelvo 
-            nombre: 'Jordan',
-            apellido: 'hernando',
-            hola
-        });
-    },
-
-    test: (req, res) => {
-        return res.status(200).send({
-            mensaje: 'Soy la accion test'
-        });
-    },
-
     // Metdo para crear un nuevo articulo
     save: (req, res) => {
 
@@ -40,6 +23,7 @@ var controller = {
         } catch (error) {
             
             return res.status(200).send({
+                status: 'error',
                 mensaje: 'Faltan dattos !'
             });
         
@@ -47,16 +31,35 @@ var controller = {
 
         if(validate_title && validate_content) {
             // Crear el objeto a guardar
+            var article = new Article(); // Modelo
 
-            // Asignar valores
+            // Asignar valores 
+            article.title = params.title;
+            article.content = params.content;
+            article.image = null;
 
-            // Guardar el article
+            // Guardar el article en la base de datos
+            article.save((err, articleStored) => {
 
-            // DEvolvar respuesta           
-                
-        
+                if(err || !articleStored) {
+                    return res.status(404).send({
+                        status: 'error',
+                        mensaje: 'El articulo no se ha guardato !'
+                    });
+                }
+
+                // DEvolvar respuesta           
+                return res.status(200).send({
+                    status: 'success',
+                    article: articleStored
+                });
+    
+            });
+
+            
         } else {
             return res.status(200).send({
+                status: 'error',
                 mensaje: 'Los datos no son validos'
             });
         }
