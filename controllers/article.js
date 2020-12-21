@@ -202,6 +202,36 @@ var controller = {
             });
         }
 
+    },
+
+    delete: (req, res) => {
+
+        // Recoger el ID de la URL
+        var articleId = req.params.id;
+
+        // Find and delete
+        Article.findOneAndDelete({_id: articleId}, (err, articleRemove) => {
+            
+            if(err) {
+                return res.status(500).send({
+                    status: 'error',
+                    mensaje: 'Error al borrar'
+                });
+            }
+
+            if(!articleRemove) {
+                return res.status(404).send({
+                    status: 'error',
+                    mensaje: 'No se a podido borrar el articulo !'
+                });
+            }
+            
+            return res.status(200).send({
+                status: 'succes',
+                article: articleRemove
+            })
+        
+        });
     }
 
 }; //End controller

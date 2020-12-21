@@ -17,4 +17,7 @@ router.get('/article/:id', ArticleController.getArticle);
 // Ruta para actualizar 
 router.put('/article/:id', ArticleController.upDate);
 
+// Ruta para eliminar 
+router.delete('/article/:id', ArticleController.delete);
+
 module.exports = router;
