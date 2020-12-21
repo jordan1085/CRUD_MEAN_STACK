@@ -9,6 +9,7 @@ const { param } = require('../routes/article');
 var fs = require('fs');
 var path = require('path');
 const article = require('../models/article');
+const { exists } = require('../models/article');
 
 var controller = {
 
@@ -296,6 +297,32 @@ var controller = {
             
         }
         
+    },
+
+    // Sacar imagen
+
+    getImage: (req, res) => {
+
+        // Sacar fichero
+        var file = req.params.image;
+
+        var path_file = './upload/articles/'+file;
+
+        fs.exists(path_file,(exists) => { // comprobamos si el fichero existe 
+            if(exists) {
+                
+                // resuelve la ruta con path.resolve
+                return res.sendFile(path.resolve(path_file)); 
+
+            } else {
+
+                return res.status(200).send({
+                    status: 'error',
+                    mensaje: 'La imagen no existe !'
+                });
+
+            }
+        });
     }
 
 }; //End controller
