@@ -310,7 +310,7 @@ var controller = {
 
         fs.exists(path_file,(exists) => { // comprobamos si el fichero existe 
             if(exists) {
-                
+
                 // resuelve la ruta con path.resolve
                 return res.sendFile(path.resolve(path_file)); 
 
@@ -323,6 +323,45 @@ var controller = {
 
             }
         });
+    },
+
+    search: (req, res) => {
+
+        // Sacar el string a buscar
+        var searchString = req.params.search;
+
+        // Find or
+        Article.find({ "$or": [
+            { "title": {"$regex": searchString, "$options": "i"}}, // Si el searchString esta incluido dentro del titulo
+            { "content": {"$regex": searchString, "$options": "i"}}
+        ]})
+        .sort([['date', 'descending']])
+        .exec((err, articles) => {
+
+            if(err) {
+
+                return res.status(500).send({
+                    status: 'error',
+                    mensaje: 'Error en la peticion'
+                });
+
+            }
+
+            if(!articles || articles.length <= 0) {
+
+                return res.status(404).send({
+                    status: 'error',
+                    mensaje: 'No hay articulos que coincidan con tu busqueda'
+                });
+
+            }
+
+            return res.status(200).send({
+                status: 'succes',
+                articles
+            });
+
+        })
     }
 
 }; //End controller

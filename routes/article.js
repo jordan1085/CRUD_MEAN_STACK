@@ -27,6 +27,10 @@ router.delete('/article/:id', ArticleController.delete);
 // Ruta para subir archivos
 router.post('/upload-image/:id', md_upload, ArticleController.upload);
 
+// Ruta para sacar imagen
 router.get('/get-image/:image', ArticleController.getImage);
+
+// Ruta para el buscador
+router.get('/search/:search', ArticleController.search);
 
 module.exports = router;
