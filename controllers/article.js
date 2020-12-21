@@ -48,7 +48,7 @@ var controller = {
                     });
                 }
 
-                // DEvolvar respuesta           
+                // Devolvar respuesta           
                 return res.status(200).send({
                     status: 'success',
                     article: articleStored
@@ -63,7 +63,37 @@ var controller = {
                 mensaje: 'Los datos no son validos'
             });
         }
+    },
+
+    // Metodo cargar los archivos de la base de datos
+    getArticles: (req, res) => {
+
+        // Extraer datos con Find 
+        Article.find({}).sort('-_id').exec((err, articles) => {
+            
+            if(err) {
+                return res.status(500).send({
+                    status: 'error',
+                    mensaje: 'Error al devolver los articulos'
+                });
+            }
+
+            if(!articles) {
+                return res.status(404).send({
+                    status: 'error',
+                    mensaje: 'No hay articulos para mostrar'
+                });
+            }
+
+            return res.status(200).send({
+                status: 'succes',
+                articles
+            
+            });
+        });
+
     }
+
 }; //End controller
 
 
