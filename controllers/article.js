@@ -2,6 +2,7 @@
 
 'use strict'
 
+const { query } = require('express');
 var validator = require('validator'); 
 var Article = require('../models/article');
 
@@ -68,8 +69,17 @@ var controller = {
     // Metodo cargar los archivos de la base de datos
     getArticles: (req, res) => {
 
+        var query = Article.find({});
+
+        // Ultimos 5 resultados
+        var last = req.params.last;
+
+        if(last || last != undefined) {
+            query.limit(5);
+        }
+
         // Extraer datos con Find 
-        Article.find({}).sort('-_id').exec((err, articles) => {
+        query.sort('-_id').exec((err, articles) => {
             
             if(err) {
                 return res.status(500).send({
