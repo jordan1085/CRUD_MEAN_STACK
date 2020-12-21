@@ -20,12 +20,14 @@ app.use(bodyParser.json());
 // Añadir prefijos a rutas
 
 // Ruta o metodo de prueba
-app.get('/probando', (req, res) => {
+app.post('/probando', (req, res) => {
     
+    var hola = req.body.hola; // Solicitud Datos que resivo req
     
-    return res.status(200).send({
+    return res.status(200).send({ // Respuesta: Datos que devuelvo 
         nombre: 'Jordan',
-        apellido: 'hernando'
+        apellido: 'hernando',
+        hola
     })
 })
 
